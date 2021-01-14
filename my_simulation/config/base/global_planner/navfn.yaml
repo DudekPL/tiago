@@ -1,0 +1,8 @@
+base_global_planner: navfn/NavfnROS
+
+NavfnROS:
+  default_tolerance: 0.75 # 0.5
+
+  allow_unknown: true # false
+
+  visualize_potential: true

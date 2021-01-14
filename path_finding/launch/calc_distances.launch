@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+	<arg name="world"  default="small_office_inventory"/> 
+
+	<!-- necessary if gazebo was run before-->
+	<param name="/use_sim_time" value="false"/>
+
+	<!-- map server (map for StaticLayer of costmap_2d) -->
+	<arg name="map_yaml" value="$(find mapping)/maps/$(arg world)/map.yaml"/>
+	<node pkg="map_server" type="map_server" name="map_server" args="$(arg map_yaml)"/>
+
+	<!-- global planner and costmap_2d node -->
+	<node pkg="global_planner" type="planner" name="planner" output="screen">
+		<param name="planner/old_navfn_behavior" value="false" />
+        	<param name="planner/use_quadratic" value="true" />
+        	<param name="planner/use_dijkstra" value="true" />
+        	<param name="planner/use_grid_path" value="false" />
+       		<param name="planner/allow_unknown" value="true" />
+        	<param name="planner/planner_window_x" value="0.0" />
+        	<param name="planner/planner_window_y" value="0.0" />
+        	<param name="planner/default_tolerance" value="1.0" />
+        	<param name="planner/publish_scale" value="100" />
+		<rosparam file="$(find path_finding)/config/calc_distance/global_costmap_params.yaml" />
+	</node>
+
+	<!-- node creating matrix of distances as parameter-->
+	<node pkg="path_finding" type="create_dist_matrix.py" name="create_dist_matrix" output="screen" required="true"/>
+	<rosparam file="$(find my_simulation)/params/$(arg world).yaml" />
+	<rosparam param="look_up_points/respawn">[[0, 0, 0]]</rosparam>
+        <param name="save_yaml_dir" value="$(find path_finding)/params/$(arg world)_dist.yaml"/>
+</launch>
+

@@ -1,0 +1,8 @@
+transform_tolerance: 0.3
+costmap:
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 5.0
+  static_map: true
+  plugins: 
+   - {name: static_map, type: "costmap_2d::StaticLayer"}
