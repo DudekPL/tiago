@@ -10,6 +10,7 @@ from items_locating.srv import Find_object
 import sqlite3 as sql
 from tf.transformations import quaternion_from_euler
 import random
+from path_finding.srv import pickup_objects_srv, pickup_objects_srvResponse
 
 start_point = 'spawn'
 
@@ -66,7 +67,7 @@ def plan_path2():
     return whole_path
 
 
-def plan_path(d=2, k=4, Imax=3):
+def plan_path(d=2, k=4, Imax=5):
     shortest_path = []
     shortest_dist = float('inf')
     _sorted_points = sorted(points, reverse=True, key=get_priority)
@@ -177,23 +178,14 @@ def get_spawn_distances_from_db(_cur, _spawn_id):
     return _dict
 
 
-if __name__ == '__main__':
-    rospy.init_node('pickup_node', anonymous=True)
-    move_base_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-    # srv for removing picked up objects
-    rospy.wait_for_service('gazebo/delete_model')
-    remove_model_srv = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
-    # srv for checking if object is seen by robot
-    rospy.wait_for_service('find_object_srv')
-    find_object = rospy.ServiceProxy('find_object_srv', Find_object)
+def pickup_object_service(_req):
+    global spawn, objects, points, dist_dict, spawn_dist
+    to_pickup = _req.objects
     # connection to database
     db_path = rospkg.RosPack().get_path('path_finding')
     conn = sql.connect(db_path + "/../test.db")
     conn.row_factory = sql.Row
     cursor = conn.cursor()
-    # loading params
-    to_pickup = rospy.get_param('/objects_to_pickup')
-    world_name = rospy.get_param('world_name')
     # selects from db
     spawn = get_spawn_from_db(cursor, world_name)
     objects = get_objects_from_db(cursor, to_pickup)
@@ -230,4 +222,25 @@ if __name__ == '__main__':
             remove_model_srv(p.object)
             picked_up.append(p.object)
             print("############################ picked up ##########################")
+    conn.close()
+    response = pickup_objects_srvResponse()
+    not_picked_up = list(set(to_pickup)-set(picked_up))
+    response.done = len(not_picked_up) == 0
+    return response
+
+
+if __name__ == '__main__':
+    rospy.init_node('pickup_node', anonymous=True)
+    move_base_client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+    # srv for removing picked up objects
+    rospy.wait_for_service('gazebo/delete_model')
+    remove_model_srv = rospy.ServiceProxy('gazebo/delete_model', DeleteModel)
+    # srv for checking if object is seen by robot
+    rospy.wait_for_service('find_object_srv')
+    find_object = rospy.ServiceProxy('find_object_srv', Find_object)
+
+    # loading params
+    world_name = rospy.get_param('world_name')
+
+    main_service = rospy.Service('pickup_objects', pickup_objects_srv, pickup_object_service)
     rospy.spin()

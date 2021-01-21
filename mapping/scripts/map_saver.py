@@ -9,7 +9,7 @@ from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion
 import roslaunch
 import rospkg
-
+import os
 
 class App:
 
@@ -61,7 +61,7 @@ class App:
         Tk.Label(self.master, text="Spawn point:").grid(row=1, columnspan=2)
         Tk.Label(self.master, text="x").grid(row=2)
         Tk.Label(self.master, text="y").grid(row=3)
-        Tk.Label(self.master, text='w').grid(row=4)
+        Tk.Label(self.master, text='yaw').grid(row=4)
 
         self.x_output = Tk.Label(self.master, text=str(self.point.pose.position.x))
         self.x_output.grid(row=2, column=1)
@@ -99,9 +99,11 @@ if __name__ == "__main__":
     rospy.init_node("base_access")
     world_name = rospy.get_param('world_name')
     pkg_path = rospkg.RosPack().get_path('mapping')
-    save_path = pkg_path + '/maps/' + world_name + '/map'
+    save_path = pkg_path + '/maps/' + world_name
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
     _node = roslaunch.core.Node(package='map_server', required=True,  node_type='map_saver',
-                                args='-f '+save_path, output='screen')
+                                args='-f '+save_path+'/map', output='screen')
     _launch = roslaunch.scriptapi.ROSLaunch()
     _launch.start()
     _launch.launch(_node)
