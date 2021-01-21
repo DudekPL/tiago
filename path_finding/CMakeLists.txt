@@ -47,17 +47,17 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+   FILES
+   Point.msg
+)
 
 ## Generate services in the 'srv' folder
 add_service_files(
    FILES
    Turn_towards_srv.srv
    pickup_objects_srv.srv
+   Plan_path_srv.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -163,6 +163,7 @@ catkin_install_python(PROGRAMS
    scripts/create_dist_matrix.py
    scripts/pickup_objects.py
    scripts/turn_towards.py
+   scripts/plan_path.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

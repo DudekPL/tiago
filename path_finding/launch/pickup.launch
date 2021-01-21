@@ -18,7 +18,7 @@
 	<rosparam file="$(find my_simulation)/params/$(arg world).yaml" />
 	<rosparam param="objects_to_pickup">["a", "b", "c"]</rosparam>
 
-	<include file="$(find my_simulation)/launch/my_simulation.launch">
+	<include file="$(find my_simulation)/launch/my_simulation.launch" >
 		<arg name="world"  value="$(arg world)" />
 		<arg name="global_planner" value="$(arg global_planner)"/>
 		<arg name="multi" value="$(arg multi)" />
@@ -32,6 +32,7 @@
 	</include>
 
 	<node pkg="items_locating" type="find_object.py" name="find_object"/>
+	<node pkg="path_finding" type="plan_path.py" name="plan_path" output="screen"/>
 
 
 </launch>

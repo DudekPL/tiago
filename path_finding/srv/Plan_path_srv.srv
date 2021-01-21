@@ -1,0 +1,4 @@
+string[] objects
+string world_name
+---
+path_finding/Point[] path
