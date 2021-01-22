@@ -3,7 +3,7 @@
 import rospkg
 import sqlite3 as sql
 import rospy
-from path_finding.srv import Plan_path_srv, Plan_path_srvResponse, Plan_path_srvRequest
+from path_finding.srv import Plan_path_srv, Plan_path_srvResponse
 from path_finding.msg import Point
 import itertools as itt
 import random
@@ -108,34 +108,7 @@ def initialize_GRASP(_sorted_points, _d, _k, _spawn_point, _distance_dictionary,
     return _path
 
 
-# def plan_path2():
-#     sorted_points = sorted(points, reverse=True, key=get_priority)
-#     groups = itt.groupby(sorted_points, key=get_priority)
-#     whole_path = []
-#     for _priority, _group in groups:
-#         perm = itt.permutations(_group)
-#         shortest_dist = float('inf')
-#         shortest_path = []
-#         for _path in perm:
-#             _dist = path_length(_path)
-#             if _dist < shortest_dist:
-#                 shortest_dist = _dist
-#                 shortest_path = _path
-#         for point in shortest_path:
-#             print(point.object + ' ' + str(point.id))
-#             whole_path.append(point)
-#         whole_path.append(spawn)
-#     return whole_path
-
-
 def plan_path(_req, _Imax, _d, _k):
-    """
-
-    :param _k:
-    :param _d:
-    :param _Imax:
-    :type _req: Plan_path_srvRequest
-    """
     to_pickup = _req.objects
     world_name = _req.world_name
     # connection to database
@@ -166,9 +139,7 @@ def plan_path(_req, _Imax, _d, _k):
 
 
 if __name__ == '__main__':
-    print("############################ service plan path ##########################")
     rospy.init_node('plan_path')
-
     Imax = 5
     d = 2
     k = 4

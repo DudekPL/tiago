@@ -6,7 +6,7 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from gazebo_msgs.srv import DeleteModel
 from items_locating.srv import Find_object
 from tf.transformations import quaternion_from_euler
-from path_finding.srv import pickup_objects_srv, pickup_objects_srvResponse, Plan_path_srv, Plan_path_srvRequest, Plan_path_srvResponse
+from path_finding.srv import pickup_objects_srv, pickup_objects_srvResponse, Plan_path_srv, Plan_path_srvRequest
 
 start_point = 'spawn'
 
@@ -48,18 +48,15 @@ def pickup_object_service(_req):
     path_request.world_name = world_name
     path_request.objects = to_pickup
 
-    path_response = plan_path(path_request)  # type: Plan_path_srvResponse
+    path_response = plan_path(path_request)
     path = path_response.path
 
     move_base_client.wait_for_server()
     picked_up = []
-    print("############################ start to pick up ##########################")
     for p in path:
         if p.object in picked_up:  # skip points with objects that are already picked up
             continue
         goal = goal_msg(p)
-        print("############################ going to: "+str(goal.target_pose.pose.position.x) +
-              str(goal.target_pose.pose.position.y) + " ##########################")
         move_base_client.send_goal(goal)
         wait = move_base_client.wait_for_result()
         if not wait:
@@ -70,14 +67,11 @@ def pickup_object_service(_req):
             rospy.logerr("Move base server failed: object: {}   id: {}  state is: {}".format(p.object, p.id, state))
             msg = "Move base server failed: object: {}   id: {}  state is: {}".format(p.object, p.id, state)
             rospy.signal_shutdown(msg)
-        else:
-            print("###################### object: {}    id: {}   arrived ###############".format(p.object, p.id))
         rospy.sleep(1)
         find_object_response = find_object()
         if find_object_response.object_found:
             remove_model_srv(p.object)
             picked_up.append(p.object)
-            print("############################ picked up ##########################")
     response = pickup_objects_srvResponse()
     not_picked_up = list(set(to_pickup)-set(picked_up))
     response.done = len(not_picked_up) == 0
