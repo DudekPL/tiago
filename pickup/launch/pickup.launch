@@ -14,7 +14,7 @@
 
 	<node pkg="path_finding" type="turn_towards.py" name="turn_towards_server"/>
 
-	<node pkg="path_finding" type="pickup_objects.py" name="pickup_objects" output="screen" required="true"/>
+	<node pkg="pickup" type="pickup_objects.py" name="pickup_objects" output="screen" required="true"/>
 	<rosparam file="$(find my_simulation)/params/$(arg world).yaml" />
 	<rosparam param="objects_to_pickup">["a", "b", "c"]</rosparam>
 

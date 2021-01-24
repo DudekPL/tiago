@@ -5,7 +5,7 @@ import tf
 from math import pi, atan2
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Twist
-from path_finding.srv import Turn_towards_srv, Turn_towards_srvResponse
+from path_finding.srv import Turn_towards, Turn_towardsResponse
 
 
 def normalize_angle(_angle):
@@ -51,12 +51,12 @@ def turn_towards(robot_frame, point):
 
 def handle_request(req):
     turn_towards(req.robot_frame, [req.x, req.y])
-    return Turn_towards_srvResponse(True)
+    return Turn_towardsResponse(True)
 
 
 if __name__ == "__main__":
     rospy.init_node('turn_towards_server')
     pub = rospy.Publisher('/mobile_base_controller/cmd_vel', Twist, queue_size=1)
     tfl = tf.TransformListener()
-    srv = rospy.Service('turn_towards_srv', Turn_towards_srv, handle_request)
+    srv = rospy.Service('turn_towards_srv', Turn_towards, handle_request)
     rospy.spin()

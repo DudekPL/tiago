@@ -6,7 +6,8 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from gazebo_msgs.srv import DeleteModel
 from items_locating.srv import Find_object
 from tf.transformations import quaternion_from_euler
-from path_finding.srv import pickup_objects_srv, pickup_objects_srvResponse, Plan_path_srv, Plan_path_srvRequest
+from path_finding.srv import Plan_path, Plan_pathRequest
+from pickup.srv import pickup_objects, pickup_objectsResponse
 
 start_point = 'spawn'
 
@@ -44,7 +45,7 @@ def goal_msg(_point):
 def pickup_object_service(_req):
     to_pickup = _req.objects
 
-    path_request = Plan_path_srvRequest()
+    path_request = Plan_pathRequest()
     path_request.world_name = world_name
     path_request.objects = to_pickup
 
@@ -72,7 +73,7 @@ def pickup_object_service(_req):
         if find_object_response.object_found:
             remove_model_srv(p.object)
             picked_up.append(p.object)
-    response = pickup_objects_srvResponse()
+    response = pickup_objectsResponse()
     not_picked_up = list(set(to_pickup)-set(picked_up))
     response.done = len(not_picked_up) == 0
     return response
@@ -89,10 +90,10 @@ if __name__ == '__main__':
     find_object = rospy.ServiceProxy('find_object_srv', Find_object)
     # srv for planning path
     rospy.wait_for_service('plan_path_srv')
-    plan_path = rospy.ServiceProxy('plan_path_srv', Plan_path_srv)
+    plan_path = rospy.ServiceProxy('plan_path_srv', Plan_path)
 
     # loading params
     world_name = rospy.get_param('world_name')
 
-    main_service = rospy.Service('pickup_objects', pickup_objects_srv, pickup_object_service)
+    main_service = rospy.Service('pickup_objects', pickup_objects, pickup_object_service)
     rospy.spin()

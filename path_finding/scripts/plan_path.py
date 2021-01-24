@@ -3,7 +3,7 @@
 import rospkg
 import sqlite3 as sql
 import rospy
-from path_finding.srv import Plan_path_srv, Plan_path_srvResponse
+from path_finding.srv import Plan_path, Plan_pathResponse
 from path_finding.msg import Point
 import itertools as itt
 import random
@@ -133,7 +133,7 @@ def plan_path(_req, _Imax, _d, _k):
             shortest_dist = _dist
             shortest_path = list(_path)
     conn.close()
-    response = Plan_path_srvResponse()
+    response = Plan_pathResponse()
     response.path = shortest_path
     return response
 
@@ -143,5 +143,5 @@ if __name__ == '__main__':
     Imax = 5
     d = 2
     k = 4
-    rospy.Service('plan_path_srv', Plan_path_srv, lambda _req: plan_path(_req, Imax, d, k))
+    rospy.Service('plan_path_srv', Plan_path, lambda _req: plan_path(_req, Imax, d, k))
     rospy.spin()
