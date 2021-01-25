@@ -24,10 +24,7 @@
 		<rosparam file="$(find path_finding)/config/calc_distance/global_costmap_params.yaml" />
 	</node>
 
-	<!-- node creating matrix of distances as parameter-->
+	<!-- node creating matrix of distances and saving it to db-->
 	<node pkg="path_finding" type="create_dist_matrix.py" name="create_dist_matrix" output="screen" required="true"/>
-	<rosparam file="$(find my_simulation)/params/$(arg world).yaml" />
-	<rosparam param="look_up_points/respawn">[[0, 0, 0]]</rosparam>
-        <param name="save_yaml_dir" value="$(find path_finding)/params/$(arg world)_dist.yaml"/>
 </launch>
 
