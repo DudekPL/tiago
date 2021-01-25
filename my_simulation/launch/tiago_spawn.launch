@@ -5,7 +5,6 @@
   <arg name="ft_sensor"/>
   <arg name="laser_model"/>
   <arg name="camera_model"/>
-  <arg name="gzpose" default="-x 0 -y 0 -z 0.0 -R 0.0 -P 0.0 -Y 0.0"/>
   <arg name="multi" default=""/>
   <arg name="model_name" default="tiago"/>
   <arg name="file_suffix" value="$(eval ('no-arm' if not arm else end_effector+ ('' if not ft_sensor else '_'+ft_sensor)))"/>
@@ -33,6 +32,6 @@
 
   <!-- Spawn robot in Gazebo -->
   <node output='screen' pkg="my_simulation" type="spawn_robot.py" name="spawn_robot"
-    args="-urdf -param robot_description $(arg gzpose) -model $(arg model_name)" />
+    args="-urdf -param robot_description -model $(arg model_name)" />
 
 </launch>

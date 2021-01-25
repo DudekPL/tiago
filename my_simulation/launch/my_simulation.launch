@@ -6,9 +6,6 @@
   <arg name="sim_variant" default="0"/>
   <!--args passed to tiago_gazebo/tiago_gazebo.launch-->
   <arg name="world"  default="small_office_inventory"/>
-  <arg name="gzpose" default="-x 0.0 -y 0.0 -z 0.0 -R 0.0 -P 0.0 -Y 0.0"/>
-  <!--args passed to tiago_2dnav_gazebo/navigation.launch-->
-  <arg name="global_planner" default="global_planner"/>
     
   <param name="world_name" value="$(arg world)"/>
 
@@ -18,7 +15,7 @@
   <group if="$(arg load_yaml_map)">
     <include file="$(find tiago_2dnav_gazebo)/launch/navigation.launch">
       <arg name="mapping"        value="gmapping"/>
-      <arg name="global_planner" value="$(arg global_planner)"/>
+      <arg name="global_planner" value="global_planner"/>
       <arg name="local_planner"  value="teb"/>
       <arg name="public_sim"     value="true"/>
       <arg name="config_base_path" value="$(find my_simulation)"/>
@@ -35,7 +32,6 @@
 	  <arg name="end_effector"  value="false"/>
 	  <arg name="ft_sensor"  value="false"/>
 	  <arg name="multi" value=""/>
-	  <arg name="gzpose" value="$(arg gzpose)"/>
 	  <arg name="gui" value="true"/>
 	  <arg name="debug" value="false"/>
 	  <arg name="public_sim" value="true"/>  <!-- simulation doesn't work for public_sim=true -->

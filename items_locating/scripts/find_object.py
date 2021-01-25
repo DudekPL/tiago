@@ -24,7 +24,6 @@ def image_callback(data):
     np_frame = np.array(frame, dtype=np.uint8)
 
     hsv_frame = cv.cvtColor(np_frame, cv.COLOR_RGB2HSV)
-    cv.imshow("hsv", hsv_frame)
     mask = cv.inRange(hsv_frame, np_boundaries[0], np_boundaries[1])
     cv.imshow("masks", mask)
     _, contours, _ = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)

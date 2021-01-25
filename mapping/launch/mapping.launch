@@ -3,7 +3,6 @@
 <launch>
   <!--args passed to my_simulation/my_simulation.launch-->
   <arg name="world"  default="small_office_inventory"/>
-  <arg name="gzpose" default="-x 0.0 -y 0.0 -z 0.0 -R 0.0 -P 0.0 -Y 0.0"/>
   <!--running new rviz-->
   <arg name="rviz"     default="true"/>
 
@@ -13,7 +12,6 @@
   <!-- simulation, pointcloud to laserscan-->
   <include file="$(find my_simulation)/launch/my_simulation.launch">
       <arg name="world"  value="$(arg world)"/>
-      <arg name="gzpose" value="$(arg gzpose)"/>
       <arg name="spawn_objects" value="false"/>
       <arg name="load_yaml_map" value="false"/>
   </include>
