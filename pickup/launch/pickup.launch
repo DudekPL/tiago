@@ -5,8 +5,6 @@
 	<arg name="world"  default="small_office_inventory"/>
         <arg name="spawn_objects" default="true"/>
 
-	<node pkg="path_finding" type="turn_towards.py" name="turn_towards_server"/>
-
 	<node pkg="pickup" type="pickup_objects.py" name="pickup_objects" output="screen" required="true"/>
 	<rosparam file="$(find my_simulation)/params/$(arg world).yaml" />
 
